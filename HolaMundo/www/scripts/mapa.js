@@ -18,7 +18,14 @@ function initMap() {
 
     $("#Inicio").change(onChangeHandler);
     $("#Fin").change(onChangeHandler);
-    startDB(true);
+
+    if (checkCookie() == false) {
+        startDB(true);
+    } else {
+        getDataFromApiRest();
+        
+    }
+        
 }
 function calculateAndDisplayRoute(directionsService, directionsDisplay) {
     directionsService.route({
@@ -162,3 +169,5 @@ function crearContenido(elemento,tipo) {
          '</div>';
     return str;
 }
+
+

@@ -288,7 +288,7 @@ function cargaTodo(tabla,pintar,html) {
 
 }
 function getLecturas() {
-    return lecturas  
+    return lecturas;
 }
 
 function printEstaciones() {
@@ -346,4 +346,28 @@ function printLecturas() {
             cargaTodo("Lecturas", false, true);
         }
     }
+}
+
+function getDataFromApiRest() {
+    estaciones = [];
+    lecturas = [];
+
+    $.getJSON("http://localhost:3000/estaciones", function (data) {
+        
+        $.each(data, function (key, val) {
+            estaciones.push(val);
+        });
+        printMarkersFromApiRest();
+    });
+    $.getJSON("http://localhost:3000/lecturas", function (data) {
+
+        $.each(data, function (key, val) {
+            lecturas.push(val);
+        });
+    });
+}
+
+function printMarkersFromApiRest() {
+    dibujaMarcadores(estaciones, "EstacionesLectoras");
+    dibujaMarcadores(lecturas, "Lecturas");
 }
