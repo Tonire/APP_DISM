@@ -1,0 +1,28 @@
+﻿html,body{
+            height: 100%;
+            margin:0;
+            padding:0;
+        }
+        #map{
+            display: block;
+            position:absolute;
+            height:auto;
+            bottom:0;
+            top:0;
+            left:0;
+            right:0;
+             margin-top:50px;
+        }
+        #floating-panel{
+            position: absolute;
+            top:30%;
+            left:25%;
+            z-index: 0;
+            background-color: #fff;
+            padding: 5px;
+            border:1px solid #999;
+            text-align: center;
+            font-family: 'Roboto', 'sans-serif';
+            line-height: 30px;
+            padding-left:10px;
+        }

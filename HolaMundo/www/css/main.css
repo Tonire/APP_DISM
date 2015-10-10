@@ -1,0 +1,58 @@
+﻿.menu-principal{
+    background-image: url('../images/mapafondoblur.jpg'); 
+    // background-position:-30px -30px;
+    // height:600px;
+    background-size:cover;
+    width:100%;
+    height:100%;
+    padding-top:30%;
+    padding-left:5%;
+    padding-right:5%;
+    position:fixed;
+    //-webkit-transition:background-position linear 0.1s;
+    //transition:background-position linear 0.1s;
+}
+.bajoMenu{
+    margin-top:85px;
+    margin-bottom:20px;
+}
+#tablaEstaciones tbody tr{
+    opacity:0;
+    -webkit-transition: opacity 0.25s ease-in;
+    -moz-transition: opacity 0.25s ease-in;
+    -o-transition: opacity 0.25s ease-in;
+}
+#tablaLecturas tbody tr{
+    opacity:0;
+    -webkit-transition: opacity 0.25s ease-in;
+    -moz-transition: opacity 0.25s ease-in;
+    -o-transition: opacity 0.25s ease-in;
+}
+#tablaEstaciones tbody tr.load{
+    opacity:1;
+}
+
+#tablaLecturas tbody tr.load{
+    opacity:1;
+}
+.oculto{
+    display:none;
+}
+.mapaForm{
+    
+}
+.mapa{
+     display: block;
+            height:auto;
+            bottom:0;
+            top:0;
+            left:0;
+            right:0;
+}
+#map{
+    width: 100%;
+    height: 200px;
+}
+.tablaBaja{
+    margin-bottom:85px;
+}

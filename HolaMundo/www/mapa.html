@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta charset="utf-8" />
+    <title>Rutas</title>
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">-->
+    <link rel="stylesheet" href="https://bootswatch.com/paper/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/bootstrap-select.min.css" />
+    <!-- Referencias de HolaMundo -->
+    <link href="css/index.css" rel="stylesheet" />
+    <link href="css/mapa.css" rel="stylesheet" />
+</head>
+<body>
+    <header>
+        <div class="navbar navbar-default navbar-fixed-top">
+            <nav>
+                <div class="container-fluid">
+                    <!-- Brand and toggle get grouped for better mobile display -->
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                            <span class="sr-only">Activar navegación</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="#">Mapa</a>
+                    </div>
+
+                    <!-- Collect the nav links, forms, and other content for toggling -->
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav">
+                            <!-- <li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>-->
+                            <li><a href="index.html">Inicio</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><select id="Inicio" title='Desde...' class="selectpicker" data-width="100%">
+                                    <option value="alicante">Alicante</option>
+                                    <option value="murcia">Murcia</option>
+                                    <option value="valencia">Valencia</option>
+                                </select>
+                            </li>
+                            <li><select  id="Fin" title='Hasta...' class="selectpicker"  data-width="100%">
+                                        <option value="alicante">Alicante</option>
+                                        <option value="murcia">Murcia</option>
+                                        <option value="valencia">Valencia</option>
+                                </select>
+                            </li>
+                            </ul>
+                    </div><!-- /.navbar-collapse -->
+                </div><!-- /.container-fluid -->
+            </nav>
+        </div>
+    </header>
+    <div id="map"></div>
+    
+    <script src="scripts/bd.js"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAppFMUDP76wmOz3ZHQBoPzmRTNIBAEEJw&callback=initMap"></script>
+    <!-- Referencia de Cordova que se agrega a la aplicación cuando se compila. -->
+    <script src="scripts/mapa.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="cordova.js"></script>
+    <script src="scripts/platformOverrides.js"></script>
+    <script src="scripts/index.js"></script>
+    <script src="scripts/bootstrap-select.min.js"></script>
+</body>
+</html>

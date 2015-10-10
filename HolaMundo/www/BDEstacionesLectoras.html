@@ -1,0 +1,95 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>CRUD Estaciones Lectoras</title>
+    <link rel="stylesheet" href="https://bootswatch.com/paper/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="css/sweetalert.css" />
+    <!--<link rel="stylesheet" href="css/mapa.css" />-->
+</head>
+<body>
+    <header>
+        <div class="navbar navbar-default navbar-fixed-top">
+            <nav>
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                            <span class="sr-only">Activar navegación</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="#">Estaciones</a>
+                    </div>
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav">
+                            <li><a href="index.html">Inicio</a></li>
+                        </ul>
+                    </div><!-- /.navbar-collapse -->
+                </div><!-- /.container-fluid -->
+            </nav>
+        </div>
+    </header>
+    <div class="bajoMenu">
+        <input id="add" type="button" class="btn btn-info btn-lg btn-block" value="+ AÑADIR ESTACIÓN" />
+        <div id="formu" class="form-group oculto">
+            <label for="id">Identificador:</label>
+            <input id="id" type="text" class="form-control" />
+            <label for="lat">Latitud:</label>
+            <input id="lat" type="number"  class="form-control"/>
+            <label for="long">Longitud:</label>
+            <input id="long" type="number" class="form-control" />
+            <div id="mapita" class=".mapaForm" >
+                <div id="map"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="tablaBaja">
+        <table id="tablaEstaciones" class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>ID Estación</th>
+                    <th>Latitud</th>
+                    <th>Longitud</th>
+                </tr>
+                
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    <div class="navbar navbar-default navbar-fixed-bottom">
+        <input type="button" id="editar" class="btn btn-primary" value="EDITAR"/>
+        <input type="button" id="eliminar" class="btn btn-danger" value="ELIMINAR"/>
+    </div>
+    <script type="text/javascript">
+
+        var map;
+        function initMap() {
+                map = new google.maps.Map(document.getElementById('map'), {
+                center: {lat: -34.397, lng: 150.644},
+                zoom: 8
+            });
+        }
+       
+    </script>
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAppFMUDP76wmOz3ZHQBoPzmRTNIBAEEJw&callback=initMap">
+    </script>
+    <script src="scripts/jquery-2.1.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="scripts/platformOverrides.js"></script>
+    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+    <script src="scripts/bd.js"></script>
+    <script type="text/javascript">
+        startDB(false);
+        printEstaciones();
+    </script>
+    <script src="scripts/formularioEstaciones.js"></script>
+    <script src="scripts/sweetalert.min.js"></script>
+    
+</body>
+</html>

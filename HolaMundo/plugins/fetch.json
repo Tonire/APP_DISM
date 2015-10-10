@@ -1,0 +1,26 @@
+{
+    "cordova-plugin-whitelist": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-whitelist@1"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-device-motion": {
+        "source": {
+            "type": "local",
+            "path": "C:\\Users\\tonir\\Desktop\\cordova-plugin-device-motion-8f1ad44"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-shake": {
+        "source": {
+            "type": "local",
+            "path": "C:\\Users\\tonir\\Desktop\\cordova-plugin-shake-master"
+        },
+        "is_top_level": true,
+        "variables": {}
+    }
+}
