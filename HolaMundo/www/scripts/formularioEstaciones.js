@@ -30,7 +30,11 @@ $('#editar').click(function () {
 
                 //Aqui actualizar los datos
                 limpiaTabla();
-                modificaEstacion(estaciones[fila]);
+                if (checkCookie() == false) {
+                    modificaEstacion(estaciones[fila]);
+                } else {
+                    modificaEstacionApiRest(estaciones[fila]);
+                }
                 marker.setMap(null);
             } else {
                 if (contador == 0) {
@@ -49,7 +53,11 @@ $('#editar').click(function () {
 
                 //Aqui actualizar los datos
                 limpiaTabla();
-                addEstacion();
+                if (checkCookie() == false) {
+                    addEstacion();
+                } else {
+                    addEstacionApiRest();
+                }
                 marker.setMap(null);
                 $('#adding').attr("id", "editar");
                 add = false;
@@ -90,12 +98,21 @@ $('#eliminar').click(function () {
     $('input[type=checkbox]').each(function (i) {
         if ($(this).is(":checked")) {
             limpiaTabla();
-            eliminaEstacion(estaciones[i].idEstacion);
+            if (checkCookie() == false) {
+                eliminaEstacion(estaciones[i].idEstacion);
+            } else {
+                eliminaEstacionApiRest(estaciones[i].idEstacion);
+            }
             contador++;
         }
     });
     if (contador != 0) {
-        cargaTodo("EstacionesLectoras", false, true);
+        if (checkCookie() == false) {
+            cargaTodo("EstacionesLectoras", false, true);
+        } else {
+            getDataFromApiRest(false,"EstacionesLectoras");
+        }
+        
     } else {
         sweetAlert("Oops...", "Debes seleccionar al menos una estación!", "error");
     }
@@ -164,6 +181,20 @@ function modificaEstacion(estacion) {
     }
 }
 
+function modificaEstacionApiRest(estacion) {
+    estacion.idEstacion = $('#id').val();
+    estacion.latitud = parseFloat($('#lat').val());
+    estacion.longitud = parseFloat($('#long').val());
+    $.ajax({
+        url: 'http://localhost:3000/estaciones/' + estacion.idEstacion,
+        data: estacion,
+        type: 'PUT',
+        success: function (response) {
+            getDataFromApiRest(false, "EstacionesLectoras");
+        }
+    });
+}
+
 function eliminaEstacion(num) {
     if (dataBase != null) {
         var active = dataBase.result;
@@ -176,6 +207,15 @@ function eliminaEstacion(num) {
             console.log("Estacion borrada correctamente!!!");
         }
     }
+}
+function eliminaEstacionApiRest(num) {
+    $.ajax({
+        url: 'http://localhost:3000/estaciones/' + num,
+        type: 'DELETE',
+        success: function (response) {
+            //getDataFromApiRest(false, "EstacionesLectoras");
+        }
+    });
 }
 
 function addEstacion() {
@@ -199,5 +239,19 @@ function addEstacion() {
             cargaTodo("EstacionesLectoras", false, true);
             sweetAlert('Oops', 'Debe rellenar todos los campos. Error irrecuperable',"error");
         }
+    }
+}
+
+function addEstacionApiRest() {
+    if ($('#id').val() != '' && $('#lat').val() != '' && $('#long').val() != '') {
+        var cadena = '{"idEstacion":"' + $('#id').val() + '" "latitud":"' + $('#lat').val()+ '" "longitud":"' + $('#long').val()+ '"}';
+        //var obj = JSON.parse(cadena);
+        var posting = $.post('http://localhost:3000/estaciones', { idEstacion: $('#id').val(), latitud: $('#lat').val(), longitud: $('#long').val() });
+        posting.done(function (data) {
+            getDataFromApiRest(false, "EstacionesLectoras");
+        });
+    } else {
+        getDataFromApiRest(false, "EstacionesLectoras");
+        sweetAlert('Oops', 'Debe rellenar todos los campos. Error irrecuperable', "error");
     }
 }

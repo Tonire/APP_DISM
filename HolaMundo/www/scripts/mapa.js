@@ -22,7 +22,7 @@ function initMap() {
     if (checkCookie() == false) {
         startDB(true);
     } else {
-        getDataFromApiRest();
+        getDataFromApiRest(true);
         
     }
         

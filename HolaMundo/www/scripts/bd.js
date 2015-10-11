@@ -348,7 +348,7 @@ function printLecturas() {
     }
 }
 
-function getDataFromApiRest() {
+function getDataFromApiRest(mapa,tabla) {
     estaciones = [];
     lecturas = [];
 
@@ -357,17 +357,29 @@ function getDataFromApiRest() {
         $.each(data, function (key, val) {
             estaciones.push(val);
         });
-        printMarkersFromApiRest();
+        cargaLecturasFromApiRest(mapa,tabla);
     });
+    
+}
+
+
+function cargaLecturasFromApiRest(mapa,tabla) {
     $.getJSON("http://localhost:3000/lecturas", function (data) {
 
         $.each(data, function (key, val) {
             lecturas.push(val);
         });
+        if (mapa) {
+            printMarkersFromApiRest();
+        } else {
+            generateHtml(tabla);
+        }
     });
 }
 
+
+
 function printMarkersFromApiRest() {
     dibujaMarcadores(estaciones, "EstacionesLectoras");
-    dibujaMarcadores(lecturas, "Lecturas");
+    //dibujaMarcadores(lecturas, "Lecturas");
 }
