@@ -5,8 +5,12 @@ var agregar = false;
 var estaciones = [];
 var lecturas = [];
 
+/** Método principal de IdexedDB 
+* @param boolean meterDatos
+* Si es true, se lanzará el método encargado de meter datos a la base de datos
+*/
 function startDB(meterDatos) {
-   /* var req = indexedDB.deleteDatabase("monitor");
+    /*var req = indexedDB.deleteDatabase("monitor");
     req.onsuccess = function () {
         console.log("Deleted database successfully");
     };
@@ -15,7 +19,8 @@ function startDB(meterDatos) {
     };
     req.onblocked = function () {
         console.log("Couldn't delete database due to the operation being blocked");
-    };*/
+    };
+    agregar = true;*/
     dataBase = indexedDB.open("monitor", 1);
  
     dataBase.onupgradeneeded = function (e) {
@@ -54,6 +59,10 @@ function startDB(meterDatos) {
     };
 
 }
+/** Método encargado de introducir a mano estaciones y lecturas a IndexedDB
+* Cuando se termina de añadir se llama el método cargaTodo, encargado de
+* rellenar los dos arrays de estaciones y lecturas.
+*/
 function add() {
     var active = dataBase.result;
     var data = active.transaction(["EstacionesLectoras","Lecturas"], "readwrite");
@@ -201,11 +210,10 @@ function add() {
         longitud: "-0.509973"
     });
 
-    data.onsuccess = function (e) {
+    data.oncomplete = function (e) {
         console.log("Objetos agregados correctamente!!!");
         cargaTodo("EstacionesLectoras",true,false);
         cargaTodo("Lecturas",false,false);
-        alert('Objeto agregado correctamente');
     };
     var si=true
     data.onerror = function (a) {
@@ -213,14 +221,18 @@ function add() {
             console.log("No se han cargado objetos. Cargando de todas maneras");
             cargaTodo("EstacionesLectoras", true, false);
             cargaTodo("Lecturas", false, false);
-            //alert(a.toString());
             si = false;
         }
         
     };
 
 }
-
+/** cargaTodo rellena los arrays de estaciones y lecturas. Estos arrays deben estar llenos, pues son el corazón de la aplicación
+* @params String tabla, boolean pintar, boolean html
+* tabla debe ser igual a la tabla que se quiere cargar de la base de datos
+* pintar debe ser true si se quiere pintar en el mapa los marcadores una vez cargados.
+* html debe ser true si se quiere escribir la tabla en el html después de cargar los datos.
+*/
 function cargaTodo(tabla,pintar,html) {
     
     if (dataBase != null) {
@@ -260,8 +272,6 @@ function cargaTodo(tabla,pintar,html) {
             };
         }
         data.oncomplete = function () {
-            
-            //alert("Carga completa!!!  " + elementos[0]);
             if (tabla.localeCompare("EstacionesLectoras") == 0) {
                 if (pintar == true) {
                     console.log("Carga completa!!! Pintando marcadores....");
@@ -282,15 +292,16 @@ function cargaTodo(tabla,pintar,html) {
             }
         };
     }
-    
-    //return elementos;
-
 
 }
+/* getLecturas simplemente retorna el array de lecturas.
+* este método es llamado desde el mapa para pintar las lecturas.
+*/
 function getLecturas() {
     return lecturas;
 }
 
+/* Método auxiliar para imprimir la tabla de las estaciones en el html */
 function printEstaciones() {
     if (dataBase != null) {
         dataBase.onsuccess = function (e) {
@@ -298,9 +309,15 @@ function printEstaciones() {
         }
     }
 }
+/* limpiaTabla borra la tabla html */
 function limpiaTabla() {
     $('#tablaEstaciones tbody tr').remove();
 }
+
+/* generateHtml se encarga de recorrer el array de estaciones o lecturas y escribe una tabla html con todo el contenido de los objetos
+* @params String tabla
+* tabla debe ser igual a la tabla que queremos imprimir. En nuestro caso, EstacionesLectoras o Lecturas.
+*/
 function generateHtml(tabla) {
     
     var html = '';
@@ -321,7 +338,7 @@ function generateHtml(tabla) {
     } else {
         limpiaTablaEstaciones();
         for (var i = 0; i < lecturas.length; i++) {
-            html = html + '<tr><td><input type="checkbox"></td><th scope="row">' + lecturas[i].idIndividuo + '</th><td>' + lecturas[i].idLector + '</td><td>' + lecturas[i].latitud + '</td><td>' + lecturas[i].longitud + '</td><td>' + lecturas[i].fechaHora + '</td></tr>';
+            html = html + '<tr><td><input type="checkbox"></td><th scope="row">' + lecturas[i].idIndividuo + '</th><td>' + lecturas[i].idLector + '</td><td>' + lecturas[i].latitud + '</td><td>' + lecturas[i].longitud + '</td><td>' +$.format.date(lecturas[i].fechaHora, 'dd/mm/yy') + '</td></tr>';
         }
         $('#tablaLecturas tbody').append(html);
 
@@ -337,9 +354,16 @@ function generateHtml(tabla) {
     
     
 }
+/* fade es un método auxilir para añadir un pequeño efecto 'fade' a cada fila de la tabla
+* @params Object objeto
+* objeto es la fila (o parte del html) a la que le queremos aplicar el efecto.
+* Para darle un pequeño offset, este método es llamado desde dentro del bucle para generar el html
+* utilizando la función intrínseca de javascript setTimeout (veanse las líneas 348 y 334)
+*/
 function fade(objeto) {
     $(objeto).addClass("load");
 }
+
 function printLecturas() {
     if (dataBase != null) {
         dataBase.onsuccess = function (e) {
@@ -348,6 +372,11 @@ function printLecturas() {
     }
 }
 
+/* getDataFromApiRest se encarga de obtener toda la información desde la API REST, y rellena los arrays principales (que son prioridad)
+* @params boolean mapa, String tabla
+* mapa será true si queremos poner los marcadores directamente en el mapa
+* tabla debe ser igual a la tabla que queremos obtener (aunque aquí está 'hardcodeado' para obtener primero las estaciones y luego las lecturas)
+*/
 function getDataFromApiRest(mapa,tabla) {
     estaciones = [];
     lecturas = [];
@@ -362,7 +391,7 @@ function getDataFromApiRest(mapa,tabla) {
     
 }
 
-
+/* Ídem a getDataFormApiRest pero carga las lecturas */
 function cargaLecturasFromApiRest(mapa,tabla) {
     $.getJSON("http://localhost:3000/lecturas", function (data) {
 
@@ -378,8 +407,7 @@ function cargaLecturasFromApiRest(mapa,tabla) {
 }
 
 
-
+/* dibuja los marcadores una vez cargados los datos desde la API REST */
 function printMarkersFromApiRest() {
     dibujaMarcadores(estaciones, "EstacionesLectoras");
-    //dibujaMarcadores(lecturas, "Lecturas");
 }

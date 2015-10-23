@@ -2,6 +2,10 @@
 var marcadoresLecturas = [];
 var infos = [];
 var infLectura = [];
+
+/* initMap inicializa el mapa. Cuando termina comprueba si estamos utilizando la API REST con checkCoockie() y decide a qué método llamar
+* si estamos usando la API REST llama a getDataFromApiRest(), a startDB si es de otra forma.
+*/
 function initMap() {
     var directionsService = new google.maps.DirectionsService;
     var directionsDisplay = new google.maps.DirectionsRenderer;
@@ -40,6 +44,11 @@ function calculateAndDisplayRoute(directionsService, directionsDisplay) {
         }
     });
 }
+/* dibujaMarcadores se encarga de recorrer el array que se le pasa como primer parámetro y el tipo de elemento que se está dibujando
+* @params Array elementos, String titulo
+* A cada marcador de cada estación se le establece un listener (onClickListener, intrínseco de javascript) para que aparezcan sus 
+* lecturas asociadas.
+*/
 function dibujaMarcadores(elementos,titulo) {
     var i = 0;
     infos = [];
@@ -104,12 +113,17 @@ function dibujaMarcadores(elementos,titulo) {
     
 }
 
+/* Método auxiliar para cerrar todas las ventanas de información y que no se superpongan. De esta manera queda una interfaz mucho más limpia.
+* @params Array informaciones
+* Se le pasa por parámetros el array con todas las ventanas de informaciones. Se recorren y se cierran.
+*/
 function closeInfos(informaciones) {
     var i = 0;
     for (i = 0; i < informaciones.length; i++) {
         informaciones[i].close();
     }
 }
+/* Método encargado de pintar en el mapa los marcadores de lecturas. Éste método es invocado al pinchar en un marcador. */
 function marcadorLectura(posicion, titulo,j,ico) {
     var mark;
     setTimeout(function () {
@@ -138,6 +152,7 @@ function marcadorLectura(posicion, titulo,j,ico) {
     }, j * 200);
     
 }
+/* Método auxiliar para quitar marcadores del mapa (En este caso está hardcodeado para quitar los marcadores de lecturas */
 function quitaMarcadores() {
     var i = 0;
     if (marcadoresLecturas != null) {
@@ -147,12 +162,18 @@ function quitaMarcadores() {
     }
     marcadoresLecturas = [];
 }
+/* Método auxiliar para hacer zoom a un marcador cuando se pinche sobre él */
 function zoom(marcador){
     map.setCenter(marcador.position);
     if (map.getZoom() < 17) {
         map.setZoom(17);
     }
 }
+/* crearContenido se encarga de hacer el html de las infoWindows que aparecen al pinchar sobre los distintos marcadores
+* @params Array elemento, String tipo
+* @reutrn str
+* El return es una cadena de html con el texto de la infoWindow
+*/
 function crearContenido(elemento,tipo) {
     var str;
    // var background = 'https://maps.googleapis.com/maps/api/streetview?size=600x300&location=' + elemento.latitud + ',' + elemento.longitud + '&heading=151.78&pitch=-0.76&key=AIzaSyAppFMUDP76wmOz3ZHQBoPzmRTNIBAEEJw';

@@ -81,17 +81,23 @@
         }
 
     </script>
+    <script src="scripts/coockies.js"></script>
     <script async defer
             src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAppFMUDP76wmOz3ZHQBoPzmRTNIBAEEJw&callback=initMap">
     </script>
     <script src="scripts/jquery-2.1.4.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script src="scripts/platformOverrides.js"></script>
+    <script src="scripts/jquery-dateFormat.js"></script>
     <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
     <script src="scripts/bd.js"></script>
     <script type="text/javascript">
-        startDB(false);
-        printLecturas();
+        if (checkCookie() == false) {
+            startDB(false);
+            printLecturas();
+        } else {
+            getDataFromApiRest(false,"Lecturas");
+        }
     </script>
     <script src="scripts/formularioLecturas.js"></script>
     <script src="scripts/sweetalert.min.js"></script>

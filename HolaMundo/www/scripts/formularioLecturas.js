@@ -32,7 +32,11 @@ $('#editar').click(function () {
 
                 //Aqui actualizar los datos
                 limpiaTablaEstaciones();
-                modificaLectura(lecturas[fila]);
+                if (checkCookie() == false) {
+                    modificaLectura(lecturas[fila]);
+                } else {
+                    modificaLecturaApiRest(lecturas[fila]);
+                }
                 marker.setMap(null);
             } else {
                 if (contador == 0) {
@@ -51,7 +55,11 @@ $('#editar').click(function () {
 
                 //Aqui actualizar los datos
                 limpiaTablaEstaciones();
-                addLectura();
+                if (checkCookie() == false) {
+                    addLectura();
+                } else {
+                    addLecturaApiRest();
+                }
                 marker.setMap(null);
                 $('#adding').attr("id", "editar");
                 add = false;
@@ -63,6 +71,25 @@ $('#editar').click(function () {
         }
     }
 
+});
+$('#lat').change(function () {
+    if (map != null) {
+        if ($('#lat').val() != '' && $('#long').val() != '') {
+            var posicion = new google.maps.LatLng(parseFloat($('#lat').val()), parseFloat($('#long').val()));
+            map.setCenter(posicion);
+            marker.setPosition(posicion);
+        }
+    }
+});
+$('#long').change(function () {
+    if (map != null) {
+        if ($('#lat').val() != '' && $('#long').val() != '') {
+            var posicion = new google.maps.LatLng(parseFloat($('#lat').val()), parseFloat($('#long').val()));
+            map.setCenter(posicion);
+            marker.setPosition(posicion);
+        }
+
+    }
 });
 
 $('#add').click(function () {
@@ -96,12 +123,22 @@ $('#eliminar').click(function () {
     $('input[type=checkbox]').each(function (i) {
         if ($(this).is(":checked")) {
             limpiaTabla();
-            eliminaLectura(lecturas[i].idIndividuo);
+            if (checkCookie() == false) {
+                eliminaLectura(lecturas[i].idIndividuo);
+            } else {
+                eliminaLecturaApiRest(lecturas[i].idIndividuo);
+            }
+            
             contador++;
         }
     });
     if (contador != 0) {
-        cargaTodo("Lecturas", false, true);
+        if (checkCookie() == false) {
+            cargaTodo("Lecturas", false, true);
+        } else {
+            getDataFromApiRest(false, "Lecturas");
+        }
+        
     } else {
         sweetAlert("Oops...", "Debes seleccionar al menos una lectura!", "error");
     }
@@ -122,6 +159,15 @@ function eliminaLectura(num) {
     }
 }
 
+function eliminaLecturaApiRest(num) {
+    $.ajax({
+        url: 'http://localhost:3000/lecturas/' + num,
+        type: 'DELETE',
+        success: function (response) {
+            //getDataFromApiRest(false, "EstacionesLectoras");
+        }
+    });
+}
 
 function addMarkerLectura(latitud, longitud) {
 
@@ -172,6 +218,22 @@ function modificaLectura(lect) {
     }
 }
 
+function modificaLecturaApiRest(lect) {
+    lect.idIndividuo = $('#id').val();
+    lect.idLector = $('#esta').val();
+    lect.fechaHora = $('#fech').val();
+    lect.latitud = parseFloat($('#lat').val());
+    lect.longitud = parseFloat($('#long').val());
+    $.ajax({
+        url: 'http://localhost:3000/lecturas/' + lect.idIndividuo,
+        data: lect,
+        type: 'PUT',
+        success: function (response) {
+            getDataFromApiRest(false, "Lecturas");
+        }
+    });
+}
+
 function limpiaTablaEstaciones() {
     $('#tablaLecturas tbody tr').remove();
 }
@@ -199,5 +261,19 @@ function addLectura() {
             cargaTodo("Lecturas", false, true);
             sweetAlert('Oops', 'Debe rellenar todos los campos. Error irrecuperable', "error");
         }
+    }
+}
+
+function addLecturaApiRest() {
+    if ($('#id').val() != '' && $('#lat').val() != '' && $('#long').val() != '') {
+        //var cadena = '{"idIndividuo":"' + $('#id').val() + "idLector:"+  + '" "latitud":"' + $('#lat').val() + '" "longitud":"' + $('#long').val() + '"}';
+        //var obj = JSON.parse(cadena);
+        var posting = $.post('http://localhost:3000/lecturas', { idIndividuo: $('#id').val(), latitud: $('#lat').val(), longitud: $('#long').val(), idLector: $('#esta').val(),fechaHora: $('#fech').val() });
+        posting.done(function (data) {
+            getDataFromApiRest(false, "Lecturas");
+        });
+    } else {
+        getDataFromApiRest(false, "Lecturas");
+        sweetAlert('Oops', 'Debe rellenar todos los campos. Error irrecuperable', "error");
     }
 }
